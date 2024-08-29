@@ -1,0 +1,21 @@
+<p-button (click)="loadContent()" label="Создать" [outlined]="true"/>
+<!-- @for (data of dataCheck; track data.currentNodes) {
+    <div class="diary-container">
+        <div class="buttons__container">
+            <a [routerLink]="['/edit', data.currentNodes]" class="p-button" (click)="changeNote(data)">Изменить</a>
+            <p-button (click)="deleteNote(data)" label="Удалить" [outlined]="true"/>
+            <p-button [class]="button_visibility" label="Сохранить" [outlined]="true"/>
+        </div>
+        <app-text-component [diaryData]="data"></app-text-component>
+    </div>
+} -->
+<div class="diary-container" *ngFor="let data of dataCheck | keyvalue">
+    <div class="buttons__container">
+        <a [routerLink]="['/edit', data.key]" class="p-button" (click)="changeNote(data)">Изменить</a>
+        <p-button (click)="deleteNote(data)" label="Удалить" [outlined]="true"/>
+        <p-button [class]="button_visibility" label="Сохранить" [outlined]="true"/>
+    </div>
+    <app-text-component [diaryData]="data.value"></app-text-component>
+</div>
+<router-outlet></router-outlet>
+<!-- <app-text-component [diaryData]="dataCheck"></app-text-component> -->

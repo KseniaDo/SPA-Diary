@@ -1,0 +1,8 @@
+.button {
+    &_invisible {
+        display: none;
+    }
+    &_visible {
+        display: inline-flex;
+    }
+}

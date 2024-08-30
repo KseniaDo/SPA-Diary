@@ -1,4 +1,4 @@
-import { Component, ViewContainerRef, Input } from '@angular/core';
+import { Component, ViewContainerRef, Input, OnInit, AfterViewInit } from '@angular/core';
 import { NgFor, KeyValuePipe } from '@angular/common';
 import { TextComponentComponent } from '../text-component/text-component.component';
 import { RouterLink, RouterOutlet } from '@angular/router';
@@ -20,15 +20,38 @@ import { OutputData } from '@editorjs/editorjs';
   templateUrl: './diary-notes.component.html',
   styleUrl: './diary-notes.component.scss'
 })
-export class DiaryNotesComponent {
+export class DiaryNotesComponent implements OnInit {
 
   @Input() button_visibility: string = 'button_invisible';
-  dataCheck: Map<string, OutputData> = new Map(Object.entries(JSON.parse(localStorage.getItem('test') || '{}')));
+  dataCheck!: Map<string, OutputData>;
+
+  ngOnInit() : void {
+    const sortCheck: Map<string, OutputData> = new Map(Object.entries(JSON.parse(localStorage.getItem('test') || '{}')));
+    const arraySortCheck = Array.from(sortCheck, ([name, value]) => ({name, value}));
+    const newMap  = (arraySortCheck).sort((value1, value2) => {
+      if (value1.value.time! > value2.value.time!) {
+        return 1;
+      }
+      if (value1.value.time! < value2.value.time!) {
+        return -1;
+      }
+      return 0;
+    })
+    let sortAfter = new Map<string, OutputData>();
+    let noteUuid: string;
+    newMap.forEach(elem => {
+      sortAfter.set(elem.name, elem.value)
+    })
+
+    this.dataCheck = sortAfter;
+
+    localStorage.setItem('test', JSON.stringify(Object.fromEntries(sortAfter)));
+    console.log(localStorage.getItem('test'));
+  }
 
 
   loadContent() {
     console.log(this.dataCheck);
-    // this.items.push({id: this.items.length+1, text: "Hi!!"});
   }
 
   changeNote(noteTime: any) {

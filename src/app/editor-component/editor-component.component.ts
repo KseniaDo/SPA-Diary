@@ -9,6 +9,12 @@ import EditorJS, { OutputData } from '@editorjs/editorjs';
 import Underline from '@editorjs/underline';
 // import SimpleImage from '@editorjs/simple-image';
 
+const enum States {
+  UNKNOWN,
+  CREATE,
+  EDIT,
+}
+
 @Component({
   selector: 'app-editor-component',
   standalone: true,
@@ -28,7 +34,7 @@ export class EditorComponentComponent implements AfterViewInit, OnInit{
   private passedData!: OutputData;
   paramValue = "";
 
-  private stateEdit: boolean = false;
+  private state: States = States.UNKNOWN;
   private linkEditDataId: string = "";
 
   constructor(private activatedRoute: ActivatedRoute) {
@@ -36,16 +42,13 @@ export class EditorComponentComponent implements AfterViewInit, OnInit{
 
   ngOnInit() : void {
     this.linkEditDataId = this.activatedRoute.snapshot.params["id"];
+    this.state = this.linkEditDataId ? States.EDIT : States.CREATE;
     console.log(this.linkEditDataId)
-    this.stateEdit = Boolean(this.linkEditDataId);
-    if (this.linkEditDataId) {
+    if (this.state == States.EDIT) {
       console.log(this.linkEditDataId);
-      // this.stateEdit = true;
       const dataNotes: Map<string, OutputData> = new Map(Object.entries(JSON.parse(localStorage.getItem('test') || '{}')));
       const dataFromPass: OutputData = dataNotes.get(this.linkEditDataId)!;
       this.passedData = dataFromPass;
-    } else {
-      // this.stateEdit = false;
     }
   }
   
@@ -54,7 +57,7 @@ export class EditorComponentComponent implements AfterViewInit, OnInit{
   }
 
   private initializeEditor(): void {
-    if (this.stateEdit) {
+    if (this.state == States.EDIT) {
       this.editor = new EditorJS({
         tools: {
           underline: Underline
@@ -64,24 +67,24 @@ export class EditorComponentComponent implements AfterViewInit, OnInit{
         data: this.passedData,
       });
       console.log(this.editor);
-    } else {
-      this.editor = new EditorJS({
-        tools: {
-          underline: Underline
-        },
-        minHeight: 200,
-        holder: this.editorElement.nativeElement,
-      });
-      console.log(this.editor);
+      return;
     }
+    this.editor = new EditorJS({
+      tools: {
+        underline: Underline
+      },
+      minHeight: 200,
+      holder: this.editorElement.nativeElement,
+    });
+    console.log(this.editor);
   } 
 
   showEditorData() : void {
     this.editor.save().then(data => {
       let current: Map<string, OutputData>;
-      console.log(this.stateEdit);
+      console.log(this.state);
 
-      if (this.stateEdit) {
+      if (this.state == States.EDIT) {
         console.log('The data was: ' + this.passedData);
         this.passedData = data;
         console.log('The data is: ' + this.passedData);
@@ -89,7 +92,6 @@ export class EditorComponentComponent implements AfterViewInit, OnInit{
         current = new Map(Object.entries(JSON.parse(localStorage.getItem('test') || '{}')));
         current.set(this.linkEditDataId , this.passedData);
         localStorage.setItem('test', JSON.stringify(Object.fromEntries(current)));
-        this.stateEdit = false;
         return;
       }
 

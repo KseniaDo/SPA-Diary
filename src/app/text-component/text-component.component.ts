@@ -3,6 +3,7 @@ import { AfterViewInit, Component, Input, ViewChild, ElementRef } from '@angular
 import { ButtonModule } from 'primeng/button';
 import EditorJS, { EditorConfig, OutputData } from '@editorjs/editorjs';
 import Underline from '@editorjs/underline';
+import SimpleImage from '@editorjs/simple-image';
 
 @Component({
   selector: 'app-text-component',
@@ -33,9 +34,10 @@ export class TextComponentComponent implements AfterViewInit {
     this.diaryNote = new EditorJS({
       readOnly: true,
       tools: {
-        underline: Underline
+        underline: Underline,
+        image: SimpleImage,
       },
-      minHeight: 100,
+      minHeight: 0,
       holder: this.diaryElement.nativeElement,
       data: this.diaryData
     });

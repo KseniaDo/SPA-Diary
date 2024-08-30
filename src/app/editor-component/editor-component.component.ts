@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import EditorJS, { OutputData } from '@editorjs/editorjs';
 import Underline from '@editorjs/underline';
-// import SimpleImage from '@editorjs/simple-image';
+import SimpleImage from '@editorjs/simple-image';
 
 const enum States {
   UNKNOWN,
@@ -60,9 +60,10 @@ export class EditorComponentComponent implements AfterViewInit, OnInit{
     if (this.state == States.EDIT) {
       this.editor = new EditorJS({
         tools: {
-          underline: Underline
+          underline: Underline,
+          image: SimpleImage,
         },
-        minHeight: 200,
+        minHeight: 0,
         holder: this.editorElement.nativeElement,
         data: this.passedData,
       });
@@ -71,9 +72,10 @@ export class EditorComponentComponent implements AfterViewInit, OnInit{
     }
     this.editor = new EditorJS({
       tools: {
-        underline: Underline
+        underline: Underline,
+        image: SimpleImage,
       },
-      minHeight: 200,
+      minHeight: 0,
       holder: this.editorElement.nativeElement,
     });
     console.log(this.editor);

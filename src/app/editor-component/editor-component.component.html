@@ -1,6 +1,7 @@
-<div class="container">
-    <p-button label="Сохранить" [outlined]="true" (click)="showEditorData()"/>
-    <p-button label="Загрузить" [outlined]="true" (click)="loadEditorData()"/>
-    <p-button label="Очистить" [outlined]="true" (click)="clearEditorData()"/>
-</div>
-<div #editor></div>
+<section class="editor">
+    <div class="button__container">
+        <p-button label="Сохранить" (click)="showEditorData()"/>
+        <p-button icon="pi pi-eraser" severity="danger" (click)="clearEditorData()"/>
+    </div>
+    <div #editor></div>
+</section>

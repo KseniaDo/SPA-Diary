@@ -1,2 +1,8 @@
+@import "primeicons/primeicons.css";
+
+@import url(./app/styles/normalisation.scss);
+@import url(./app/styles/button.scss);
+
 @import url(./app/text-component/text-component.component.scss);
 @import url(./app/diary-notes/diary-notes.component.scss);
+@import url(./app/no-found/no-found.component.scss);

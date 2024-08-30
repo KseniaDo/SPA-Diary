@@ -24,6 +24,7 @@ export class DiaryNotesComponent implements OnInit {
 
   @Input() button_visibility: string = 'button_invisible';
   dataCheck!: Map<string, OutputData>;
+  datas!: Map<string, string>;
 
   ngOnInit() : void {
     const sortCheck: Map<string, OutputData> = new Map(Object.entries(JSON.parse(localStorage.getItem('test') || '{}')));
@@ -37,27 +38,19 @@ export class DiaryNotesComponent implements OnInit {
       }
       return 0;
     })
+    this.datas = new Map<string, string>();
     let sortAfter = new Map<string, OutputData>();
-    let noteUuid: string;
     newMap.forEach(elem => {
-      sortAfter.set(elem.name, elem.value)
+      sortAfter.set(elem.name, elem.value);
+      let unix_time = new Date(elem.value.time!);
+      let currDate = `${unix_time.getDate()} ${unix_time.toLocaleString('default', { month: 'short' })} ${unix_time.getFullYear()} ${unix_time.getHours()}:${unix_time.getMinutes()}`;
+      this.datas.set(elem.name, currDate);
     })
 
     this.dataCheck = sortAfter;
 
     localStorage.setItem('test', JSON.stringify(Object.fromEntries(sortAfter)));
     console.log(localStorage.getItem('test'));
-  }
-
-
-  loadContent() {
-    console.log(this.dataCheck);
-  }
-
-  changeNote(noteTime: any) {
-    console.log(noteTime);
-    this.button_visibility = 'button_visible'
-
   }
 
   deleteNote(noteTime: any) {
